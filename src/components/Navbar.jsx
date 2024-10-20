@@ -17,6 +17,9 @@ const Navbar = () => {
           <li>
             <NavLink to='/'>Home</NavLink>
           </li>
+          {user && <li>
+            <NavLink to='/allJobs'>All Jobs</NavLink>
+          </li>}
 
           {!user &&
             <>
