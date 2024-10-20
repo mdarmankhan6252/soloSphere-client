@@ -29,7 +29,18 @@ const Register = () => {
     const password = form.password.value;
     const name = form.name.value;
     const photo = form.photo.value;
-    console.log(email, password, name, photo);
+
+    try {
+      await createUser(email, password)
+      await updateUserProfile(name, photo)
+      setUser({...user, photoURL: photo, displayName: name})
+      toast.success('Sign Up Successful.')
+      navigate('/')
+    }
+    catch (err) {
+      toast.error(err.message)
+    }
+
   }
   return (
     <div className='flex justify-center items-center min-h-[calc(100vh-306px)]'>
