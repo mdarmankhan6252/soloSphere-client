@@ -1,8 +1,20 @@
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 import JobCard from './JobCard';
+import { useEffect, useState } from 'react';
+import axios from 'axios'
 
 const TabCategory = () => {
+   const [jobs, setJobs] = useState([])
+
+   useEffect(() => {
+      axios.get(`${import.meta.env.VITE_server_Url}/jobs`)
+         .then(res => {
+            setJobs(res.data)
+         })
+   }, [])
+
+   console.log(jobs)
    return (
       <Tabs>
          <div className='container px-6 py-10 mx-auto'>
@@ -20,13 +32,28 @@ const TabCategory = () => {
 
 
             <TabPanel>
-               <JobCard />
+               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+                  {
+                     jobs.filter(job => job.category === 'Web Development')
+                     .map((job, i) => <JobCard key={i} job={job} />)
+                  }
+               </div>
             </TabPanel>
             <TabPanel>
-               <JobCard />
+               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+                  {
+                     jobs.filter(job => job.category === 'Graphic Design')
+                     .map((job, i) => <JobCard key={i} job={job} />)
+                  }
+               </div>
             </TabPanel>
             <TabPanel>
-               <JobCard />
+               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
+                  {
+                     jobs.filter(job => job.category === 'Digital Marketing')
+                     .map((job, i) => <JobCard key={i} job={job} />)
+                  }
+               </div>
             </TabPanel>
          </div>
       </Tabs>
