@@ -9,6 +9,10 @@ const Register = () => {
   const { user, setUser, createUser, signInWithGoogle, updateUserProfile, } = useContext(AuthContext)
   const navigate = useNavigate()
 
+  if(user){
+    navigate('/')
+  }
+
   //sing in with google 
   const handleGoogleLogin = async () => {
     try {
@@ -40,7 +44,6 @@ const Register = () => {
     catch (err) {
       toast.error(err.message)
     }
-
   }
   return (
     <div className='flex justify-center items-center min-h-[calc(100vh-306px)]'>

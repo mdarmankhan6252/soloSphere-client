@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,7 +12,8 @@ const JobDetails = () => {
     const job = useLoaderData()
     const { user } = useContext(AuthContext)
     const [startDate, setStartDate] = useState(new Date());
-    const { category, deadline, title, max_price, min_price, description, _id } = job;
+    const navigate = useNavigate()
+    const { category, deadline, title, max_price, min_price, description, _id, buyer } = job;
     console.log(job);
 
     const handlePlaceBid = async e => {
@@ -20,19 +21,29 @@ const JobDetails = () => {
         const form = e.target;
         const jobId = _id;
         const price = parseFloat(form.price.value);
-        if(price <= parseFloat(min_price)) return toast.error('Pay at least or equal of minimum price.')
+        if (price <= parseFloat(min_price)) return toast.error('Pay at least or equal of minimum price.')
         const comment = form.comment.value;
         const email = user?.email;
         const status = 'pending'
         const deadline = startDate;
+        if(buyer.buyer_email === email){
+            return Swal.fire({
+                title: "Hey, bro",
+                text: "Your forget it that you are the poster of the job.",
+                icon: "error"
+              });
+        }
 
         const bidData = {
             jobId,
+            title,
+            deadline,
+            category,
+            email,
             price,
             comment,
-            email,
             status,
-            deadline
+            buyer
         }
 
         try {
@@ -47,6 +58,7 @@ const JobDetails = () => {
                             timer: 1500
                         });
                         form.reset()
+                        navigate('/myBids')
                     }
                 })
         } catch (error) {
@@ -59,7 +71,7 @@ const JobDetails = () => {
             <div className='flex-1  px-4 py-7 bg-white rounded-md shadow-md md:min-h-[350px]'>
                 <div className='flex items-center justify-between'>
                     <span className='text-sm font-light text-gray-800 '>
-                        Deadline: {deadline}
+                        Deadline: {new Date(deadline).toLocaleDateString()}
                     </span>
                     <span className='px-4 py-1 text-xs text-blue-800 uppercase bg-blue-200 rounded-full '>
                         {category}
@@ -79,13 +91,13 @@ const JobDetails = () => {
                     </p>
                     <div className='flex items-center gap-5'>
                         <div>
-                            <p className='mt-2 text-sm  text-gray-600 '>Name: Jhankar Vai.</p>
+                            <p className='mt-2 text-sm  text-gray-600 '>Name: {buyer.name}</p>
                             <p className='mt-2 text-sm  text-gray-600 '>
-                                Email: jhankar@mahbub.com
+                                Email: {buyer?.buyer_email}
                             </p>
                         </div>
                         <div className='rounded-full object-cover overflow-hidden w-14 h-14'>
-                            <img src='' alt='' />
+                            <img src={buyer.photo} alt='' />
                         </div>
                     </div>
                     <p className='mt-6 text-lg font-bold text-gray-600 '>
@@ -109,6 +121,7 @@ const JobDetails = () => {
                                 id='price'
                                 type='text'
                                 name='price'
+                                required
                                 className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md   focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring'
                             />
                         </div>
@@ -121,6 +134,7 @@ const JobDetails = () => {
                                 id='emailAddress'
                                 type='email'
                                 name='email'
+                                required
                                 defaultValue={user?.email}
                                 disabled
                                 className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md   focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring'
@@ -131,10 +145,11 @@ const JobDetails = () => {
                             <label className='text-gray-700 ' htmlFor='comment'>
                                 Comment
                             </label>
-                            <input
+                            <input 
                                 id='comment'
                                 name='comment'
                                 type='text'
+                                required
                                 className='block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-200 rounded-md   focus:border-blue-400 focus:ring-blue-300 focus:ring-opacity-40  focus:outline-none focus:ring'
                             />
                         </div>

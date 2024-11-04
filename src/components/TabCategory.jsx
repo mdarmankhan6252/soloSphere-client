@@ -14,7 +14,6 @@ const TabCategory = () => {
          })
    }, [])
 
-   console.log(jobs)
    return (
       <Tabs>
          <div className='container px-6 py-10 mx-auto'>
@@ -42,7 +41,7 @@ const TabCategory = () => {
             <TabPanel>
                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
                   {
-                     jobs.filter(job => job.category === 'Graphic Design')
+                     jobs.filter(job => job.category === 'Graphics Design')
                      .map((job, i) => <JobCard key={i} job={job} />)
                   }
                </div>

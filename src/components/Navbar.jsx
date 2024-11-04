@@ -2,8 +2,10 @@ import { useContext } from "react"
 import { AuthContext } from "../provider/AuthProvider"
 import { Link, NavLink } from "react-router-dom"
 
+
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext)
+
   return (
     <div className='navbar bg-base-100 shadow-sm container px-4 mx-auto'>
       <div className='flex-1'>
@@ -51,16 +53,16 @@ const Navbar = () => {
             className='menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52'
           >
             <li>
-              <div className='justify-between'>Add Job</div>
+              <NavLink to='/addJob'>Add Job</NavLink>
             </li>
             <li>
-              <div>My Posted Jobs</div>
+              <NavLink to='/myPostedJobs'>My Posted Jobs</NavLink>
             </li>
             <li>
-              <div>My Bids</div>
+              <NavLink to='/myBids'>My Bids</NavLink>
             </li>
             <li>
-              <div>Bid Requests</div>
+            <NavLink to='/myBidsRequest'>My Bids Request</NavLink>
             </li>
             <li className='mt-2'>
               <button onClick={() => logOut()} className='bg-gray-200 block text-center'>Logout</button>
